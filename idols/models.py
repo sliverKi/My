@@ -16,7 +16,7 @@ class Idol(models.Model):
         BoySolo = ("BoySolo", "BoySolo")
 
     class GenderChoices(models.TextChoices):
-        Women = ("Women", "Women")
+        Woman = ("Woman", "Woman")
         Man = ("Man", "Man")
 
     idol_group = models.CharField(
@@ -31,8 +31,9 @@ class Idol(models.Model):
         null=True,
         choices=SoloChoices.choices,
     )
+
     idol_name = models.CharField(max_length=7)
-    idol_profile = models.URLField(max_length=10000)
+    idol_profile = models.URLField(max_length=10000, blank=True, null=True)
 
     idol_anniv = models.DateField()
     idol_birthday = models.DateField()
@@ -42,8 +43,9 @@ class Idol(models.Model):
         choices=GenderChoices.choices,
     )
 
-    idol_schedule = models.ManyToManyField(
+    idol_schedules = models.ManyToManyField(
         "idols.Schedule",
+        blank=True,
         related_name="idols",
     )
 
@@ -63,16 +65,20 @@ class Schedule(CommonModel):
         null=True,
     )
 
-    ScheduleType = models.CharField(
+    ScheduleType = models.ForeignKey(
+        "categories.Category",
         max_length=150,
-        blank="",
+        blank=True,
         null=True,
+        on_delete=models.SET_NULL,
+        related_name="schedules",
     )
 
-    participant = models.CharField(
+    participant = models.ManyToManyField(
+        "idols.Idol",
         max_length=150,
-        null=True,
         blank=True,
+        related_name="schedules",
     )
 
     description = models.CharField(

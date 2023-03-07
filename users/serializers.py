@@ -1,19 +1,31 @@
-from rest_framework import serializers
+# from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from .models import User
+
 # from django.contrib.auth import User
-class TinyUserSerializers(ModelSerializer):#simple user-info
+class TinyUserSerializers(ModelSerializer):  # simple user-info
     class Meta:
-        model=User
-        fields=(
+        model = User
+        fields = (
             "pk",
-            "profileImg",
-            "nickname",
             "username",
+            "nickname",
+            "email",
+            "profileImg",
             "pick",
         )
 
+
 class PrivateUserSerializer(ModelSerializer):
     class Meta:
-        model=User 
-        fields="__all__"
+        model = User
+        exclude = (
+            "password",
+            "is_superuser",
+            "is_staff",
+            "is_active",
+            "first_name",
+            "last_name",
+            "groups",
+            "user_permissions",
+        )
